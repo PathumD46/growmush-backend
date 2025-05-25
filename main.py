@@ -1,4 +1,6 @@
+import os
 import json
+import base64
 from typing import Union
 from fastapi import FastAPI
 import firebase_admin
@@ -10,10 +12,13 @@ from datetime import datetime, timedelta
 from pydantic import BaseModel
 from fastapi import Query
 
+# Decode the service account credentials from the environment variable
+service_account_info = json.loads(base64.b64decode(os.environ['GOOGLE_CREDENTIALS_BASE64']))
+
 # Initialize Firebase
-cred = credentials.Certificate("firebase-service-account.json")  # Replace with your file name
+cred = credentials.Certificate(service_account_info)
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://growmush-ce1f0-default-rtdb.asia-southeast1.firebasedatabase.app'  # Replace with your Firebase URL
+    'databaseURL': 'https://growmush-ce1f0-default-rtdb.asia-southeast1.firebasedatabase.app'
 })
 
 class Item(BaseModel):
